@@ -1,0 +1,43 @@
+version: "3.8"  # Upgraded to version 3.8
+
+networks:
+  app:
+    driver: bridge
+services:
+  project:
+    image: project
+    container_name: project-container 
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - app
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:3.6.19-xenial
+    container_name: mongo-container  
+    ports:
+      - "27017:27017"
+    networks:
+      - app
+    volumes:
+      - mongo_data:/data/db
+  caddy:
+    image: caddy/caddy:2.2.1-alpine
+    container_name: caddy-container 
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+
+
+
+volumes:
+  mongo_data:
+    driver: local
+  caddy_data:
+  caddy_config:

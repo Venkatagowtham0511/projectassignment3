@@ -1,0 +1,3 @@
+localhost:80 {
+  reverse_proxy project:3000  
+}
